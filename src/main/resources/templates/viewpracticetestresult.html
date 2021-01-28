@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.thymeleaf.org "
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<title>View Practice Test Result</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<!-- this file is responsible for confirm dialog box -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+	<div th:replace="navbar :: navbar">&nbsp;</div>
+
+<hr>
+
+<div class="container">
+
+	<table id="practiceResultTable"
+		class="table table-striped table-bordered" style="width: 100%">
+		<thead>
+			<tr>
+				<th>StudentId</th>
+				<th>Practice Test Date</th>
+				<th>total_questions</th>
+				<th>correctQuestions</th>
+				<th>incorrectQuestions</th>
+				<th>percentage</th>
+			</tr>
+		</thead>
+		<tr th:each="practiceResult: ${module1practiceResults}">
+			<td th:text="${practiceResult.studentId}" />
+			<td th:text="${practiceResult.practiceTestDate}" />
+			<td th:text="${practiceResult.totalQuestions}" />
+			<td th:text="${practiceResult.correctQuestions}" />
+			<td th:text="${practiceResult.incorrectQuestions}" />
+			<td th:text="${practiceResult.percentage}" />
+		</tr>
+	</table>
+	</div>
+</body>
+
+<script>
+$(document).ready(function(){
+    $('#practiceResultTable').dataTable();   
+});  
+</script>
+</html>

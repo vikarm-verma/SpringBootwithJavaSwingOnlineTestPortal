@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+<meta charset="ISO-8859-1">
+<title>Schedule Exam</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- jquery files -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> -->
+
+<!--js files -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
+<script
+	src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+<script src="https://cdn.jsdelivr.net/momentjs/2.14.1/moment.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+
+
+
+<!-- css files -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+
+<link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+	<!-- <div th:replace="navbar :: navbar">&nbsp;</div> -->
+
+
+	<div class="container">
+
+		<div class="row">
+			<div class="col-md-4 mt-5">
+				<form id="frm-example1" th:action="@{/ta/addScheduleMT}" th:object="${scheduleMT}" method="post">
+
+					<div class="form-group">
+						<label for="title">Module:</label> <select th:field="*{module}" id="jumpmodule">
+							<option  th:value="JUMPModule1" th:text="JUMPModule1"></option>
+							<!-- 	<option th:value="JUMPModule2" th:text="JUMPModule1"></option> -->
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label">From</label>
+						<div class='input-group date' id='datetimepicker1'>
+							<input type="text" id="txtFromDate" class="form-control"
+								th:field="*{fromDate}" /> <span class="input-group-addon">
+								<span class="glyphicon glyphicon-calendar"></span>
+							</span>
+						</div>
+						<span id="errorname1"></span>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label">To</label>
+						<div class='input-group date' id='datetimepicker2'>
+							<input type="text" id="txtToDate" class="form-control"
+								th:field="*{toDate}" required readonly disable /> <span
+								class="input-group-addon"> <span
+								class="glyphicon glyphicon-calendar"></span>
+							</span>
+						</div>
+						<span id="errorname2"></span>
+					</div>
+					<div>
+						<table id="maliste"
+							class="table table-striped table-bordered table-sm table-hover">
+							<thead>
+								<tr>
+									<th></th>
+									<th>SId</th>
+									<th>Email</th>
+									<th>Name</th>
+								</tr>
+							</thead>
+							<tr th:each="student: ${students}">
+								<td></td>
+								<td th:text="${student.sId}" />
+								<td th:text="${student.email}"  />
+								<td th:text="${student.fullName}" />
+							</tr>
+						</table>
+					</div>
+					<button  id="selection" class="btn btn-primary">Submit form</button>
+
+				</form>
+
+			</div>
+		</div>
+	</div>
+	<script>
+	
+
+	
+	
+(function($) {
+    'use strict';
+var dataArrayToSend=[];
+var scheduleMt=[];
+	/**
+	 * Initiate the DataTable
+	 * @var Object
+	 */
+var mytable = $('#maliste').DataTable({
+        columnDefs: [{
+            targets: 0,
+            className: 'select-checkbox'
+        }],
+        order: [
+            [1, 'asc']
+        ],
+        select: {
+            style: 'multi'
+        },
+        fixedHeader: true,
+        searching: true,
+        deferRender: true,
+        paging: true,
+        bProcessing: true,
+        dom: 'iftlrp'
+    });
+
+
+
+    $('#selection').click(function() {
+	
+	var examId=$("#txtExamId").val();
+	var fromDate=$("#txtFromDate").val();
+	var toDate=$("#txtToDate").val();
+	var jumpModule=$("#jumpmodule").val();
+	if(examId==null)
+	{
+	document.getElementById("txtFromDate").value =moment().format('MM/DD/YYYY h:mm a');
+	var inputValue = $('#txtFromDate').val();
+	var momObj = moment(inputValue);
+	momObj.add(8, 'hours');
+	console.log("in 2 "+momObj.format('MM/DD/YYYY, h:mm a'));
+	document.getElementById("txtToDate").value =momObj.format('MM/DD/YYYY h:mm a');
+
+	}
+        var selectedRows = mytable.rows({
+            selected: true
+        });
+        var selectedData = selectedRows.data();
+        var selectedCount = selectedRows.count();
+		
+	var selectedIDs = $.map( selectedData, function( el ) {
+	console.log("check box checked");
+	 dataArrayToSend.push(el[1]+" "+el[2]+" "+el[3]+"-"+fromDate+" "+toDate+" "+jumpModule);
+	return ;
+});
+        console.log(selectedCount);
+        console.log(selectedData);
+		console.log(selectedIDs);
+		alert( selectedCount + ' row(s) selected.' );
+		
+		 $.ajax({ 
+      contentType: "application/json",
+      type: "POST",
+      data: JSON.stringify(dataArrayToSend),
+      url: "/ta/addScheduleMT",
+      success: function(data) {
+       window.location.href = "/commondashboard";
+    // location.reload();
+          console.log('done');
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+          console.log('error while post');
+      }});
+      
+        return false;
+    });
+})(jQuery);
+  
+ $(function () {
+    $('#datetimepicker1').datetimepicker({
+    format: "MM/DD/YYYY h:mm a",
+    minDate: moment(), // Current day
+    maxDate: moment().add(7, 'days'), // 30 days from the current day
+    enabledHours:[8,9,10,11,12,13,14,15,16,17,18,19],
+    sideBySide: true,
+    showTodayButton: true,
+    keepOpen: true,
+    });
+ });
+ 
+
+ 
+
+ 
+$('#datetimepicker1').on('dp.change', function(e)
+{
+var inputValue = $('#txtFromDate').val();
+var momObj = moment(inputValue);
+momObj.add(8, 'hours');
+console.log("in 2 "+momObj.format('MM/DD/YYYY h:mm a'));
+document.getElementById("txtToDate").value =momObj.format('MM/DD/YYYY h:mm a');
+//console.log(e.date);
+ })
+ 
+function CalculateDiff() {
+console.log("calling calculateDiff");
+var today= new Date();
+if($("#txtFromDate").val()!="" && $("#txtToDate").val()!=""){ 
+var fromDate = new Date($("#txtFromDate").val());
+var toDate = new Date($("#txtToDate").val());
+
+
+
+}
+else{
+    alert("Please select date");
+
+$('#txtToDate').val('');
+    return false;
+}
+
+}
+
+function checkFromDate()
+{
+if($('#txtFromDate').val()=="")
+{
+alert("select from date");
+}
+
+}
+</script>
+</body>
+</html>

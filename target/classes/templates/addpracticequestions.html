@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.thymeleaf.org "
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="ISO-8859-1">
+ <title th:text="${add} ? 'Create Question' : 'Edit Question'" />
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/css/navbar.css">
+<style >
+#hideMe {
+    -moz-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Firefox */
+    -webkit-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Opera */
+    animation: cssAnimation 0s ease-in 5s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+@keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        overflow:hidden;
+    }
+}
+@-webkit-keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        visibility:hidden;
+    }
+}
+</style>
+</head>
+<body>
+	<div th:replace="navbar :: navbar">&nbsp;</div>
+<hr>
+	<!-- success message -->
+						<div id="hideMe" th:if="${param.success}">
+					<div class="alert alert-info">Question is added to database.</div>
+				</div>
+					<div id="hideMe" th:if="${param.alreadyAdded}">
+					<div class="alert alert-danger">Question is already added in database.</div>
+				</div>
+				<div id="hideMe" th:if="${param.radioCheck}">
+					<div class="alert alert-danger">Select an answer</div>
+				</div>
+	<div class="container">
+		 <h1 style="color:blue" class="display-4" th:text="${add} ? 'Create Question:' : 'Edit Question:'" ></h1>
+		 
+		 <!-- th:action="${add} ? @{/ta/addpracticequestions} :@{/ta/practicequestions/{questionId}/edit}" -->
+		<form action="#" class="form-check" 
+		th:action="${add} ? @{/ta/addpracticequestions} :@{/ta/practicequestions/{questionId}/edit(questionId=${practicequestions.qId})}"  method="post"
+			th:object="${practicequestions}">
+			
+			<div style="float:left;width:500px">
+			<label class="form-check-label">Question:</label> <br />
+			<textarea class="form-control" th:field="*{question}" rows="4" 
+			th:classappend="${#fields.hasErrors('question')?'is-invalid':''}"
+			></textarea>
+			<p class="invalid-feedback" th:if="${#fields.hasErrors('question')}" th:errors="*{question}">
+			<br /> 
+			
+			<div id="div1">
+			<label class="form-check-label">Answers:</label><br/>
+				<input class="form-check-input" type="radio" th:name="optradio" id="radio-1"
+					value="1" th:checked="${practicequestions.ans}==1" /> 
+					<textarea  class="form-control"
+					name="tb1"  placeholder="Option 1" th:field="*{opt1}" 
+					th:classappend="${#fields.hasErrors('opt1')?'is-invalid':''}" ></textarea>
+					<p class="invalid-feedback" th:if="${#fields.hasErrors('opt1')}" th:errors="*{opt1}">
+			</div>
+			<br/>
+			
+			<div id="div1">
+				<input class="form-check-input" type="radio" th:name="optradio" id="radio-1"
+					value="2" th:checked="${practicequestions.ans}==2" /> 
+					<textarea class="form-control"
+					name="tb1" value="" placeholder="Option 2" th:field="*{opt2}" 
+					th:classappend="${#fields.hasErrors('opt2')?'is-invalid':''}" ></textarea>
+					<p class="invalid-feedback" th:if="${#fields.hasErrors('opt2')}" th:errors="*{opt2}">
+			</div>
+			<br/>
+			<div id="div1">
+				<input class="form-check-input" type="radio" th:name="optradio" id="radio-1"
+					value="3" th:checked="${practicequestions.ans}==3" /> 
+					<textarea class="form-control"
+					name="tb1" value="" placeholder="Option 3" th:field="*{opt3}" 
+					th:classappend="${#fields.hasErrors('opt3')?'is-invalid':''}" ></textarea>
+					<p class="invalid-feedback" th:if="${#fields.hasErrors('opt3')}" th:errors="*{opt3}">
+			</div>
+			<br/>
+			<div id="div1">
+				<input class="form-check-input"  type="radio" th:name="optradio" id="radio-1"
+					value="4" th:checked="${practicequestions.ans}==4" /> 
+					<textarea class="form-control" 
+					name="tb1" value="" placeholder="Option 4" th:field="*{opt4}" 
+					th:classappend="${#fields.hasErrors('opt4')?'is-invalid':''}" ></textarea>
+					
+					<p class="invalid-feedback" th:if="${#fields.hasErrors('opt4')}" th:errors="*{opt4}">
+			</div>
+			</div>
+			<div style="float:right">
+			<br /> <input type="text" name="ans" style="visibility: hidden"
+				placeholder="Option 4"  th:field="*{ans}" /> <br />
+			<br />
+			<input style="width:200px;height:100px" type="submit" class="btn btn-primary btn-lg" th:value="${add} ? 'Add' : 'Update'" />
+			<a type="submit" style="width:200px;height:100px" class="btn btn-danger btn-lg" href="/commondashboard" >Cancel</a>
+			</div>
+		</form>
+	</div>
+	 <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error" />  
+</body>
+
+<script>
+
+</script>
+</html>
